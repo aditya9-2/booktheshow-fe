@@ -41,7 +41,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, x: 60, transition: { duration: 0.25 } }}
                             transition={{ duration: 0.35, ease: [0.25, 1, 0.5, 1] }}
-                            className={`flex min-w-[320px] max-w-sm items-start gap-3 rounded-2xl border-l-4 bg-surface px-5 py-4 shadow-2xl backdrop-blur-xl sm:min-w-[360px] ${
+                            className={`flex min-w-[320px] max-w-sm items-start gap-3 rounded-2xl border-l-4 bg-surface px-5 py-4 shadow-2xl backdrop-blur-xl sm:min-w-90 ${
                                 toast.type === "success" ? "border-l-primary" : "border-l-destructive"
                             }`}
                         >
