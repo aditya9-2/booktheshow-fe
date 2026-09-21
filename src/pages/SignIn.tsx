@@ -91,7 +91,7 @@ const SignIn = () => {
 
                             {error && <p className="text-sm text-destructive">{error}</p>}
 
-                            <Button type="submit" variant="primary" className="mt-2 w-full" disabled={loading}>
+                            <Button type="submit" variant="primary" className="mt-2 w-full cursor-pointer" disabled={loading}>
                                 {loading ? "Signing in…" : "Sign in"}
                             </Button>
                         </form>
