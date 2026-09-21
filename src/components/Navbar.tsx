@@ -36,7 +36,7 @@ const Navbar = () => {
                         Sign in
                     </Link>
                     <Link to="/signup">
-                        <Button variant="dark" size="sm">Get tickets</Button>
+                        <Button variant="dark" size="sm" className="hover:cursor-pointer">Get tickets</Button>
                     </Link>
                 </div>
 

@@ -24,10 +24,10 @@ const Hero = () => {
 
                     <div className="mt-8 flex flex-wrap items-center gap-4">
                         <Link to="/events">
-                            <Button variant="primary">Browse events</Button>
+                            <Button variant="primary" className="hover:cursor-pointer">Browse events</Button>
                         </Link>
                         <Link to="/ask-ai">
-                            <Button variant="ghost">Ask the concierge</Button>
+                            <Button variant="ghost" className="hover:cursor-pointer">Ask the concierge</Button>
                         </Link>
                     </div>
                     {/* TODO: need to create a new API to export these real Details */}
