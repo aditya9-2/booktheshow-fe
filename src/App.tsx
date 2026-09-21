@@ -14,6 +14,9 @@ import NotFound from "./pages/NotFound"
 import { useAuthStore } from "./store/authStore"
 import Events from "./pages/Events"
 import EventDetail from "./pages/EventDetail"
+import ProtectedRoute from "./components/ProtectedRoute"
+import BookTickets from "./pages/BookTickets"
+import MyBookings from "./pages/MyBookings"
 
 const AUTH_ROUTES = ["/signin", "/signup"]
 
@@ -38,6 +41,19 @@ export const App = () => {
         <Route path="/events" element={<Events />} />
         <Route path="/events/:id" element={<EventDetail />} />
 
+        {/* Protected routes */}
+        <Route path="/events/:id/book" element={
+          <ProtectedRoute>
+            <BookTickets />
+          </ProtectedRoute>
+        } />
+        <Route path="/bookings" element={
+          <ProtectedRoute>
+            <MyBookings />
+          </ProtectedRoute>
+        } />
+
+        {/* Fall back page */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!isAuthRoute && <Footer />}
