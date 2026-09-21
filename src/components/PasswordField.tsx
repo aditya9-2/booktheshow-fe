@@ -28,7 +28,7 @@ const PasswordField = forwardRef<HTMLInputElement, PasswordFieldProps>(
                     <button
                         type="button"
                         onClick={() => setVisible((v) => !v)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground transition hover:text-foreground cursor-pointer"
                         tabIndex={-1}
                         aria-label={visible ? "Hide password" : "Show password"}
                     >

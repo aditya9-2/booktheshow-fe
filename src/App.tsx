@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom"
+import { Routes, Route, useLocation } from "react-router-dom"
 import Hero from "./components/Hero"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
@@ -6,15 +6,35 @@ import FeaturedEvents from "./components/FeaturedEvents"
 import Concierge from "./components/Concierge"
 import CategoryGrid from "./components/CategoryGrid"
 import PageLoader from "./components/PageLoader"
+import SignUp from "./pages/SignUp"
+import SignIn from "./pages/SignIn"
+import { useAuthStore } from "./store/authStore"
+import { useEffect } from "react"
+
+
+const AUTH_ROUTES = ["/signin", "/signup"]
+
 
 export const App = () => {
+
+  const { pathname } = useLocation()
+  const isAuthRoute = AUTH_ROUTES.includes(pathname)
+  const hydrate = useAuthStore((s) => s.hydrate)
+
+    useEffect(() => {
+        hydrate()
+    }, [hydrate])
+
+
   return (
     <PageLoader>
-      <Navbar />
+      {!isAuthRoute && <Navbar />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/signin" element={<SignIn />} />
       </Routes>
-      <Footer />
+      {!isAuthRoute && <Footer />}
     </PageLoader>
   )
 }
