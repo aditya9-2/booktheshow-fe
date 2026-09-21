@@ -12,6 +12,7 @@ import { withMinDelay } from "@/lib/utils"
 import TopProgressBar from "@/components/TopProgressBar"
 import BackgroundShapes from "@/components/BackgroundShapes"
 import { useAuthStore } from "@/store/authStore"
+import AmbientGlow from "@/components/AmbientGlow"
 
 const SIGNIN_SHAPES = [
     { type: "circle" as const, size: 110, top: "-6%", left: "8%", delay: 0, duration: 9 },
@@ -53,6 +54,8 @@ const SignIn = () => {
             <TopProgressBar loading={loading} />
 
             <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-16">
+                
+                <AmbientGlow />
                 <BackgroundShapes shapes={SIGNIN_SHAPES} />
 
                 <motion.div

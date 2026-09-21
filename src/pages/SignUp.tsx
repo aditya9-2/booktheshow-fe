@@ -10,6 +10,7 @@ import { useToast } from "@/components/Toast"
 import { withMinDelay } from "@/lib/utils"
 import TopProgressBar from "@/components/TopProgressBar"
 import BackgroundShapes from "@/components/BackgroundShapes"
+import AmbientGlow from "@/components/AmbientGlow"
 
 const SIGNUP_SHAPES = [
     { type: "circle" as const, size: 130, top: "-8%", right: "10%", delay: 0, duration: 10 },
@@ -50,6 +51,7 @@ const SignUp = () => {
             <TopProgressBar loading={loading} />
 
             <section className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-16">
+                <AmbientGlow />
                 <BackgroundShapes shapes={SIGNUP_SHAPES} />
 
                 <motion.div
