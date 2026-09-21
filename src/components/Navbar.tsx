@@ -1,12 +1,13 @@
 import { useState } from "react"
+import { Link } from "react-router-dom"
 import { Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui-kit"
 
 const NAV_LINKS = [
-    { label: "Events", href: "#" },
-    { label: "Ask AI", href: "#" },
-    { label: "About", href: "#" },
-    { label: "Contact", href: "#" },
+    { label: "Events", href: "/events" },
+    { label: "Ask AI", href: "/ask-ai" },
+    { label: "About", href: "/about" },
+    { label: "Contact", href: "/contact" },
 ]
 
 const Navbar = () => {
@@ -15,38 +16,43 @@ const Navbar = () => {
     return (
         <header className="sticky top-0 z-40 border-b border-border bg-surface/70 backdrop-blur-xl">
             <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-                <div className="font-sans text-2xl tracking-wide ">
+               
+                <Link to="/" className="font-sans text-2xl tracking-wide" onClick={() => setOpen(false)}>
                     BOOKTHESHOW<span className="text-primary">.</span>
-                </div>
+                </Link>
 
-                {/* Desktop nav */}
+                {/* Desktop nav links */}
                 <nav className="hidden items-center gap-8 text-sm text-muted-foreground md:flex">
                     {NAV_LINKS.map((link) => (
-                        <a key={link.label} href={link.href} className="hover:text-foreground">
+                        <Link key={link.label} to={link.href} className="hover:text-foreground">
                             {link.label}
-                        </a>
+                        </Link>
                     ))}
                 </nav>
 
-                {/* Desktop actions */}
+                {/* Desktop */}
                 <div className="hidden items-center gap-4 md:flex">
-                    <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                    <Link to="/signin" className="text-sm text-muted-foreground hover:text-foreground">
                         Sign in
-                    </a>
-                    <Button className="bg-black p-5 rounded-full hover:cursor-pointer hover:bg-gray-800">Get tickets</Button>
+                    </Link>
+                    <Link to="/signup">
+                        <Button variant="dark" size="sm">Get tickets</Button>
+                    </Link>
                 </div>
 
-                {/* Hamburger */}
+                {/* Hamburger toggle */}
                 <button
                     onClick={() => setOpen(!open)}
                     className="relative text-foreground md:hidden hover:cursor-pointer"
                     aria-label="Toggle menu"
                 >
+                    
                     <Menu
                         size={24}
                         className={`transition-all duration-300 ${open ? "scale-0 opacity-0 rotate-90" : "scale-100 opacity-100 rotate-0"
                             }`}
                     />
+                    
                     <X
                         size={24}
                         className={`absolute inset-0 transition-all duration-300 ${open ? "scale-100 opacity-100 rotate-0" : "scale-0 opacity-0 -rotate-90"
@@ -63,16 +69,19 @@ const Navbar = () => {
                 <div className="px-6 py-4">
                     <nav className="flex flex-col gap-4 text-sm text-muted-foreground">
                         {NAV_LINKS.map((link) => (
-                            <a key={link.label} href={link.href} className="hover:text-foreground">
+                            <Link key={link.label} to={link.href} onClick={() => setOpen(false)} className="hover:text-foreground">
                                 {link.label}
-                            </a>
+                            </Link>
                         ))}
                     </nav>
+                    {/* Sign in only */}
                     <div className="mt-4 flex flex-col gap-3 border-t border-border pt-4">
-                        <a href="#" className="text-sm text-muted-foreground hover:text-foreground">
+                        <Link to="/signin" onClick={() => setOpen(false)} className="text-sm text-muted-foreground hover:text-foreground">
                             Sign in
-                        </a>
-                        <Button className="w-full bg-black hover:cursor-pointer hover:bg-gray-800 rounded-full">Get tickets</Button>
+                        </Link>
+                        {/* <Link to="/signup" onClick={() => setOpen(false)}>
+                            <Button variant="dark" className="w-full">Get tickets</Button>
+                        </Link> */}
                     </div>
                 </div>
             </div>
