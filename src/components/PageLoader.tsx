@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
+let hasPlayedThisSession = false
+
 const PageLoader = ({ children }: { children: React.ReactNode }) => {
-    const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(!hasPlayedThisSession)
 
     useEffect(() => {
-        const timer = setTimeout(() => setLoading(false), 1800)
+        if (hasPlayedThisSession) return
+
+        const timer = setTimeout(() => {
+            setLoading(false)
+            hasPlayedThisSession = true
+        }, 1800)
         return () => clearTimeout(timer)
     }, [])
 
@@ -14,7 +21,6 @@ const PageLoader = ({ children }: { children: React.ReactNode }) => {
             <AnimatePresence>
                 {loading && (
                     <div className="fixed inset-0 z-50">
-                        {/* Top panel — slides up on exit */}
                         <motion.div
                             key="top"
                             initial={{ y: 0 }}
@@ -22,8 +28,6 @@ const PageLoader = ({ children }: { children: React.ReactNode }) => {
                             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
                             className="absolute inset-x-0 top-0 h-1/2 bg-foreground"
                         />
-
-                        {/* Bottom panel — slides down on exit */}
                         <motion.div
                             key="bottom"
                             initial={{ y: 0 }}
@@ -31,8 +35,6 @@ const PageLoader = ({ children }: { children: React.ReactNode }) => {
                             transition={{ duration: 0.9, ease: [0.76, 0, 0.24, 1] }}
                             className="absolute inset-x-0 bottom-0 h-1/2 bg-foreground"
                         />
-
-                        {/* Centered mark, sitting exactly on the split line */}
                         <motion.div
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
@@ -48,8 +50,6 @@ const PageLoader = ({ children }: { children: React.ReactNode }) => {
                             >
                                 BOOKTHESHOW<span className="text-primary">.</span>
                             </motion.div>
-
-                            {/* Thin expanding line, like a curtain rising cue */}
                             <div className="relative h-px w-32 overflow-hidden bg-background/20">
                                 <motion.div
                                     initial={{ x: "-100%" }}
@@ -63,9 +63,8 @@ const PageLoader = ({ children }: { children: React.ReactNode }) => {
                 )}
             </AnimatePresence>
 
-            {/* Page content — scales/fades in as the curtains part */}
             <motion.div
-                initial={{ opacity: 0, scale: 0.98 }}
+                initial={{ opacity: loading ? 0 : 1, scale: loading ? 0.98 : 1 }}
                 animate={{ opacity: loading ? 0 : 1, scale: loading ? 0.98 : 1 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: loading ? 0 : 0.3 }}
             >
