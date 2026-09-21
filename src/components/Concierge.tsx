@@ -6,13 +6,24 @@ import BackgroundShapes from "@/components/BackgroundShapes"
 const containerVariants = {
     hidden: {},
     visible: {
-        transition: { staggerChildren: 0.25, delayChildren: 0.2 },
+        transition: { 
+            staggerChildren: 0.8, 
+            delayChildren: 0.5 
+        },
     },
 }
 
 const bubbleVariants = {
-    hidden: { opacity: 0, y: 16 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.25, 1, 0.5, 1] as const } },
+    hidden: {
+        opacity: 0, y: 16
+    },
+    visible: {
+        opacity: 1, y: 0,
+        transition: {
+            duration: 0.5,
+            ease: [0.25, 1, 0.5, 1] as const
+        }
+    },
 }
 
 // Custom shapes for this section — kept out of the text column (left, top area),
