@@ -69,7 +69,7 @@ const Concierge = () => {
                                     variants={bubbleVariants}
                                     className="max-w-[80%] self-end rounded-2xl rounded-tr-sm bg-primary px-4 py-3 text-sm text-primary-foreground"
                                 >
-                                    Something low-key and live, ideally under $40.
+                                    Something low-key and live, ideally under &#8377;699.
                                 </motion.div>
 
                                 <motion.div

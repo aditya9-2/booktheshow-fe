@@ -10,6 +10,7 @@ import SignUp from "./pages/SignUp"
 import SignIn from "./pages/SignIn"
 import { useAuthStore } from "./store/authStore"
 import { useEffect } from "react"
+import About from "./pages/About"
 
 
 const AUTH_ROUTES = ["/signin", "/signup"]
@@ -33,6 +34,7 @@ export const App = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/signin" element={<SignIn />} />
+        <Route path="/about" element={<About />} />
       </Routes>
       {!isAuthRoute && <Footer />}
     </PageLoader>

@@ -31,12 +31,12 @@ export function Button({ variant = "dark", size = "md", className, ...props }: B
     return (
         <button
             className={cn(
-                "inline-flex items-center justify-center rounded-full font-semibold transition disabled:cursor-not-allowed disabled:opacity-50",
+                "inline-flex items-center justify-center rounded-full font-semibold transition cursor-pointer disabled:cursor-not-allowed disabled:opacity-50",
                 size === "sm" ? "px-4 py-2 text-xs" : "px-6 py-3 text-sm",
                 variant === "primary" && "bg-primary text-primary-foreground hover:bg-primary/90",
                 variant === "dark" && "bg-foreground text-surface hover:bg-foreground/90",
                 variant === "ghost" &&
-                "border border-border bg-surface/60 text-foreground backdrop-blur-md hover:border-primary/40",
+                    "border border-border bg-surface/60 text-foreground backdrop-blur-md hover:border-primary/40",
                 variant === "danger" && "bg-destructive text-destructive-foreground hover:bg-destructive/90",
                 className,
             )}
