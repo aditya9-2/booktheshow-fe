@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 import { Button } from "@/components/ui-kit"
 import { AuroraBackground } from "@/components/ui/aurora-background"
 import heroImage from "@/assets/hero.png"
+import { motion } from "framer-motion"
 
 const Hero = () => {
     return (
@@ -45,12 +46,20 @@ const Hero = () => {
                 </div>
 
                 <div className="lg:col-span-5">
-                    <img
+                    <motion.img
                         src={heroImage}
                         alt="A single spotlight on an empty stage"
                         width={1024}
                         height={1280}
-                        className="aspect-4/5 w-full rounded-2xl object-cover"
+                        className="aspect-4/5 w-full rounded-2xl object-cover shadow-lg"
+                        whileHover={{
+                            y: [0, -12, 0],
+                            transition: {
+                                duration: 2.6,
+                                repeat: Infinity,
+                                ease: "easeInOut",
+                            },
+                        }}
                     />
                 </div>
             </div>
