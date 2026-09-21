@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useNavigate } from "react-router-dom"
 import axios from "axios"
 import { motion } from "framer-motion"
 import { getEventById } from "@/lib/api"
@@ -7,6 +7,7 @@ import type { EventItem } from "@/lib/types"
 import { Button, Panel, EmptyState } from "@/components/ui-kit"
 import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
+import { ArrowLeft } from "lucide-react"
 
 const DETAIL_SHAPES = [
     { type: "circle" as const, size: 100, top: "8%", left: "6%", delay: 0, duration: 9 },
@@ -21,6 +22,8 @@ const formatDate = (iso: string) =>
     })
 
 const EventDetail = () => {
+    const navigate = useNavigate();
+
     const { id } = useParams<{ id: string }>()
     const [event, setEvent] = useState<EventItem | null>(null)
     const [loading, setLoading] = useState(true)
@@ -87,6 +90,15 @@ const EventDetail = () => {
                 className="relative mx-auto grid max-w-5xl gap-10 lg:grid-cols-12"
             >
                 <div className="lg:col-span-5">
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(-1)}
+                        className="mb-6 gap-2"
+                    >
+                        <ArrowLeft className="size-4" />
+                        Back
+                    </Button>
                     <div className="aspect-4/5 w-full overflow-hidden rounded-2xl bg-muted">
                         {event.posterUrl ? (
                             <img src={event.posterUrl} alt={event.name} className="h-full w-full object-cover" />
