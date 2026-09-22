@@ -17,6 +17,20 @@ api.interceptors.request.use((config) => {
     return config;
 })
 
+const createEventFormData = (payload: CreateEventPayload) => {
+    const formData = new FormData();
+
+    formData.append("name", payload.name);
+    formData.append("date", payload.date);
+    formData.append("sections", JSON.stringify(payload.sections));
+
+    if (payload.poster) {
+        formData.append("posters", payload.poster);
+    }
+
+    return formData;
+}
+
 export type SignupPayload = {
     name: string;
     email: string;
@@ -55,15 +69,25 @@ export const createBooking = (payload: CreateBookingPayload) => {
 export const getMyBookings = () => api.get<MyBookingsResponse>("bookings/your-booking");
 
 export const createEvent = (payload: CreateEventPayload) => {
-    const formData = new FormData()
-    formData.append("name", payload.name)
-    formData.append("date", payload.date)
-    formData.append("sections", JSON.stringify(payload.sections))
-    if (payload.poster) {
-        formData.append("posters", payload.poster) 
-    }
+    const formData = createEventFormData(payload);
 
     return api.post<CreateEventResponse>("/admin/create-event", formData, {
         headers: { "Content-Type": "multipart/form-data" },
-    })
+    });
+};
+
+export const updateEvent = (id: string, payload: CreateEventPayload) => {
+    const formData = createEventFormData(payload);
+
+    return api.put<{ message: string; event: EventItem }>(
+        `/admin/update-event/${id}`,
+        formData,
+        {
+            headers: { "Content-Type": "multipart/form-data" },
+        }
+    );
+};
+
+export const deleteEvent = (id: string) => {
+    return api.delete<{ message: string }>(`/admin/delete-event/${id}`);
 }
