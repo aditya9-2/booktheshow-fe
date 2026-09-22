@@ -32,7 +32,7 @@ const AdminPanel = () => {
     const email = useAuthStore((s) => s.email)
 
     return (
-        <section className="relative overflow-hidden px-6 py-16">
+        <section className="relative overflow-hidden px-6 py-16 h-[83vh]">
             <AmbientGlow />
             <BackgroundShapes shapes={ADMIN_SHAPES} />
 

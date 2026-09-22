@@ -58,3 +58,22 @@ export type CreateBookingResponse = {
 export type MyBookingsResponse = {
     bookings: MyBooking[]
 }
+
+export type CreateEventSection = {
+    name: string
+    price: number
+    capacity: number
+    remaining: number
+}
+
+export type CreateEventPayload = {
+    name: string
+    date: string
+    sections: CreateEventSection[]
+    poster?: File
+}
+
+export type CreateEventResponse = {
+    message: string;
+    event: EventItem
+}

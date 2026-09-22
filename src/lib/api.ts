@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { CreateBookingPayload, CreateBookingResponse, EventItem, MyBookingsResponse } from "./types";
+import type { CreateBookingPayload, CreateBookingResponse, CreateEventPayload, CreateEventResponse, EventItem, MyBookingsResponse } from "./types";
 import { getToken } from "./auth";
 
 export const api = axios.create({
@@ -53,3 +53,17 @@ export const createBooking = (payload: CreateBookingPayload) => {
 }
 
 export const getMyBookings = () => api.get<MyBookingsResponse>("bookings/your-booking");
+
+export const createEvent = (payload: CreateEventPayload) => {
+    const formData = new FormData()
+    formData.append("name", payload.name)
+    formData.append("date", payload.date)
+    formData.append("sections", JSON.stringify(payload.sections))
+    if (payload.poster) {
+        formData.append("posters", payload.poster) 
+    }
+
+    return api.post<CreateEventResponse>("/admin/create-event", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    })
+}

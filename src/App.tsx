@@ -18,6 +18,7 @@ import BookTickets from "./pages/BookTickets"
 import MyBookings from "./pages/MyBookings"
 import GuestOnlyRoute from "./components/GuestOnlyRoute"
 import AdminPanel from "./pages/admin/AdminPanel"
+import CreateEvent from "./pages/admin/CreateEvent"
 
 const AUTH_ROUTES = ["/signin", "/signup"]
 
@@ -74,6 +75,15 @@ export const App = () => {
           element={
             <ProtectedRoute>
               <AdminPanel />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/create-event"
+          element={
+            <ProtectedRoute requireAdmin>
+              <CreateEvent />
             </ProtectedRoute>
           }
         />
