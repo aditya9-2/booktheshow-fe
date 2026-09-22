@@ -17,6 +17,7 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import BookTickets from "./pages/BookTickets"
 import MyBookings from "./pages/MyBookings"
 import GuestOnlyRoute from "./components/GuestOnlyRoute"
+import AdminPanel from "./pages/admin/AdminPanel"
 
 const AUTH_ROUTES = ["/signin", "/signup"]
 
@@ -66,6 +67,17 @@ export const App = () => {
             </ProtectedRoute>
           }
         />
+
+        {/* admin routes */}
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminPanel />
+            </ProtectedRoute>
+          }
+        />
+
 
         <Route path="*" element={<NotFound />} />
       </Routes>
