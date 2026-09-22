@@ -19,6 +19,7 @@ import MyBookings from "./pages/MyBookings"
 import GuestOnlyRoute from "./components/GuestOnlyRoute"
 import AdminPanel from "./pages/admin/AdminPanel"
 import CreateEvent from "./pages/admin/CreateEvent"
+import ManageEvents from "./pages/admin/ManageEvents"
 
 const AUTH_ROUTES = ["/signin", "/signup"]
 
@@ -84,6 +85,15 @@ export const App = () => {
           element={
             <ProtectedRoute requireAdmin>
               <CreateEvent />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin/manage-events"
+          element={
+            <ProtectedRoute requireAdmin>
+              <ManageEvents />
             </ProtectedRoute>
           }
         />
