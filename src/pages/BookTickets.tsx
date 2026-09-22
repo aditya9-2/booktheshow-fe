@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { useParams, useNavigate, Link } from "react-router-dom"
 import { motion } from "framer-motion"
 import axios from "axios"
-import { Minus, Plus, Ticket } from "lucide-react"
+import { ArrowLeft, Minus, Plus, Ticket } from "lucide-react"
 import { getEventById, createBooking } from "@/lib/api"
 import type { EventItem, EventSection } from "@/lib/types"
 import { Button, Panel, EmptyState } from "@/components/ui-kit"
@@ -177,6 +177,15 @@ const BookTickets = () => {
                     transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
                     className="relative mx-auto max-w-2xl"
                 >
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => navigate(-1)}
+                        className="mb-6 gap-2"
+                    >
+                        <ArrowLeft className="size-4" />
+                        Back
+                    </Button>
                     <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">Book tickets</p>
                     <h1 className="mt-3 font-display text-4xl tracking-wide">{event.name}</h1>
                     <p className="mt-2 text-sm text-muted-foreground">{formatDate(event.date)}</p>
