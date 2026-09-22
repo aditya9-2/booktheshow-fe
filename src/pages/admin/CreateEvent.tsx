@@ -23,7 +23,12 @@ const CreateEvent = () => {
         setError(null)
         setSubmitting(true)
         try {
-            const res = await createEvent(data)
+            const payload = {
+                ...data,
+                poster: data.poster ?? undefined
+            }
+
+            const res = await createEvent(payload)
             showToast(res.data.message ?? "Event created successfully", "success")
             navigate("/admin")
         } catch (err) {

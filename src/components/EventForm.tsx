@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent } from "react"
+import { useState, useEffect, useMemo, type FormEvent } from "react"
 import { ImagePlus, Plus, Trash2, X } from "lucide-react"
 import type { CreateEventSection, EventItem } from "@/lib/types"
 import { Button, Panel } from "@/components/ui-kit"
@@ -40,6 +40,39 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
         }
     }, [initialData])
 
+    const isFilled = useMemo(() => {
+        if (!isUpdate && !poster) return false
+        if (!name.trim() || !date) return false
+        if (sections.length === 0) return false
+
+        for (const s of sections) {
+            if (!s.name.trim() || String(s.price).trim() === "" || String(s.capacity).trim() === "") {
+                return false
+            }
+        }
+        return true
+    }, [name, date, poster, sections, isUpdate])
+
+    const isDirty = useMemo(() => {
+        if (!isUpdate || !initialData) return true 
+
+        if (name.trim() !== initialData.name) return true
+        if (date !== new Date(initialData.date).toISOString().split("T")[0]) return true
+        if (poster !== null) return true 
+        if (sections.length !== initialData.sections.length) return true
+
+        for (let i = 0; i < sections.length; i++) {
+            const cur = sections[i]
+            const init = initialData.sections[i]
+            if (cur.name.trim() !== init.name) return true
+            if (Number(cur.price) !== Number(init.price)) return true
+            if (Number(cur.capacity) !== Number(init.capacity)) return true
+        }
+
+        return false
+    }, [name, date, poster, sections, isUpdate, initialData])
+    
+
     const handlePosterFile = (file: File | undefined) => {
         if (!file) return
         if (!file.type.startsWith("image/")) {
@@ -74,7 +107,6 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
         if (!name.trim()) return "Event name is mandatory."
         if (!date) return "Event date is mandatory."
 
-        // Only check past date if they are changing it to a new past date
         if (new Date(date) < new Date(new Date().toDateString())) {
             if (!isUpdate || date !== new Date(initialData!.date).toISOString().split("T")[0]) {
                 return "Event date cannot be in the past."
@@ -125,6 +157,7 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
     }
 
     const displayError = localError || externalError
+    const isSubmitDisabled = submitting || !isFilled || (isUpdate && !isDirty)
 
     return (
         <form onSubmit={handleSubmit} className="mt-8 flex flex-col gap-8">
@@ -207,7 +240,7 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
                         Cancel
                     </Button>
                 )}
-                <Button type="submit" variant="primary" className="w-full" disabled={submitting}>
+                <Button type="submit" variant="primary" className="w-full" disabled={isSubmitDisabled}>
                     {submitting ? (isUpdate ? "Saving changes…" : "Creating event…") : (isUpdate ? "Save changes" : "Create event")}
                 </Button>
             </div>
