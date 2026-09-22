@@ -1,5 +1,4 @@
 import { Routes, Route, useLocation } from "react-router-dom"
-import { useEffect } from "react"
 import Hero from "./components/Hero"
 import Navbar from "./components/Navbar"
 import Footer from "./components/Footer"
@@ -11,12 +10,13 @@ import SignUp from "./pages/SignUp"
 import SignIn from "./pages/SignIn"
 import About from "./pages/About"
 import NotFound from "./pages/NotFound"
-import { useAuthStore } from "./store/authStore"
 import Events from "./pages/Events"
 import EventDetail from "./pages/EventDetail"
 import ProtectedRoute from "./components/ProtectedRoute"
+
 import BookTickets from "./pages/BookTickets"
 import MyBookings from "./pages/MyBookings"
+import GuestOnlyRoute from "./components/GuestOnlyRoute"
 
 const AUTH_ROUTES = ["/signin", "/signup"]
 
@@ -24,36 +24,49 @@ export const App = () => {
   const { pathname } = useLocation()
   const isAuthRoute = AUTH_ROUTES.includes(pathname)
   const isLandingPage = pathname === "/"
-  const hydrate = useAuthStore((s) => s.hydrate)
-
-  useEffect(() => {
-    hydrate()
-  }, [hydrate])
 
   const content = (
     <>
       {!isAuthRoute && <Navbar />}
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/signup" element={<SignUp />} />
-        <Route path="/signin" element={<SignIn />} />
+        <Route
+          path="/signup"
+          element={
+            <GuestOnlyRoute>
+              <SignUp />
+            </GuestOnlyRoute>
+          }
+        />
+        <Route
+          path="/signin"
+          element={
+            <GuestOnlyRoute>
+              <SignIn />
+            </GuestOnlyRoute>
+          }
+        />
         <Route path="/about" element={<About />} />
         <Route path="/events" element={<Events />} />
         <Route path="/events/:id" element={<EventDetail />} />
 
-        {/* Protected routes */}
-        <Route path="/events/:id/book" element={
-          <ProtectedRoute>
-            <BookTickets />
-          </ProtectedRoute>
-        } />
-        <Route path="/bookings" element={
-          <ProtectedRoute>
-            <MyBookings />
-          </ProtectedRoute>
-        } />
+        <Route
+          path="/events/:id/book"
+          element={
+            <ProtectedRoute>
+              <BookTickets />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/bookings"
+          element={
+            <ProtectedRoute>
+              <MyBookings />
+            </ProtectedRoute>
+          }
+        />
 
-        {/* Fall back page */}
         <Route path="*" element={<NotFound />} />
       </Routes>
       {!isAuthRoute && <Footer />}
@@ -63,13 +76,11 @@ export const App = () => {
   return isLandingPage ? <PageLoader>{content}</PageLoader> : content
 }
 
-const LandingPage = () => {
-  return (
-    <>
-      <Hero />
-      <FeaturedEvents />
-      <Concierge />
-      <CategoryGrid />
-    </>
-  )
-}
+const LandingPage = () => (
+  <>
+    <Hero />
+    <FeaturedEvents />
+    <Concierge />
+    <CategoryGrid />
+  </>
+)
