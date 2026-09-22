@@ -7,13 +7,31 @@ type AuthState = {
     isAuthenticated: boolean
     login: (token: string, email: string) => void
     logout: () => void
-    hydrate: () => void
+}
+
+const getInitialAuthState = (): Pick<AuthState, "email" | "isAdmin" | "isAuthenticated"> => {
+    const token = getToken()
+    const storedEmail = getStoredEmail()
+
+    // console.log("hydrate check →", { token, storedEmail }) 
+
+    if (token && storedEmail) {
+        const payload = decodeToken(token)
+        // console.log("decoded payload →", payload)
+        if (payload) {
+            return {
+                email: storedEmail,
+                isAdmin: isAdminRole(payload.roleId),
+                isAuthenticated: true,
+            }
+        }
+    }
+
+    return { email: null, isAdmin: false, isAuthenticated: false }
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
-    email: null,
-    isAdmin: false,
-    isAuthenticated: false,
+    ...getInitialAuthState(),
 
     login: (token, userEmail) => {
         setSession(token, userEmail)
@@ -27,24 +45,6 @@ export const useAuthStore = create<AuthState>((set) => ({
 
     logout: () => {
         clearSession()
-        set({ email: null, isAdmin: false, isAuthenticated: false })
-    },
-
-    // Rehydrates auth state from localStorage — call once on app boot
-    hydrate: () => {
-        const token = getToken()
-        const storedEmail = getStoredEmail()
-        if (token && storedEmail) {
-            const payload = decodeToken(token)
-            if (payload) {
-                set({
-                    email: storedEmail,
-                    isAdmin: isAdminRole(payload.roleId),
-                    isAuthenticated: true,
-                })
-                return
-            }
-        }
         set({ email: null, isAdmin: false, isAuthenticated: false })
     },
 }))

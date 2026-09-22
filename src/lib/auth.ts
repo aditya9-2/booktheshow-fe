@@ -26,5 +26,4 @@ export const decodeToken = (token: string): JwtPayload | null => {
     }
 }
 
-// roleId 1 = admin, per your backend's convention
 export const isAdminRole = (roleId: number) => roleId === 1
