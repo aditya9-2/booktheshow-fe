@@ -4,6 +4,7 @@ import { Music, Ticket, Sparkles, ShieldCheck, MessageCircle, Search } from "luc
 import { Button, Panel } from "@/components/ui-kit"
 import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
+import { ABOUT_SHAPES } from "@/constants/backgroundShapes"
 
 const VALUES = [
     {
@@ -34,10 +35,7 @@ const AI_CAPABILITIES = [
     { icon: Ticket, label: "Books tickets — only after you confirm" },
 ]
 
-const ABOUT_SHAPES = [
-    { type: "circle" as const, size: 120, top: "5%", right: "10%", delay: 0, duration: 10 },
-    { type: "square" as const, size: 52, bottom: "20%", left: "6%", delay: 1, duration: 9 },
-]
+
 
 const About = () => {
     return (

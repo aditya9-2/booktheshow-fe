@@ -10,10 +10,8 @@ import { useToast } from "@/components/Toast"
 import TopProgressBar from "@/components/TopProgressBar"
 import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
+import { BOOK_SHAPES } from "@/constants/backgroundShapes"
 
-const BOOK_SHAPES = [
-    { type: "circle" as const, size: 100, top: "6%", right: "8%", delay: 0, duration: 9 },
-]
 
 const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })

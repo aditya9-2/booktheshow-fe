@@ -11,12 +11,9 @@ import { withMinDelay } from "@/lib/utils"
 import TopProgressBar from "@/components/TopProgressBar"
 import BackgroundShapes from "@/components/BackgroundShapes"
 import AmbientGlow from "@/components/AmbientGlow"
+import { SIGNUP_SHAPES } from "@/constants/backgroundShapes"
 
-const SIGNUP_SHAPES = [
-    { type: "circle" as const, size: 130, top: "-8%", right: "10%", delay: 0, duration: 10 },
-    { type: "square" as const, size: 56, bottom: "10%", left: "6%", delay: 1, duration: 9 },
-    { type: "circle" as const, size: 70, bottom: "-6%", right: "20%", delay: 1.5, duration: 8 },
-]
+
 
 const SignUp = () => {
     const navigate = useNavigate()

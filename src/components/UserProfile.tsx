@@ -55,17 +55,24 @@ const UserProfile = () => {
                         </div>
 
                         <div className="flex flex-col p-1">
+                            {isAdmin && (
+                                <Link
+                                    to="/admin"
+                                    onClick={() => setOpen(false)}
+                                    className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-foreground transition hover:bg-foreground/5 cursor-pointer"
+                                >
+                                    <ShieldCheck size={16} className="text-primary" />
+                                    Admin panel
+                                </Link>
+                            )}
+
                             <Link
-                                to={isAdmin ? "/admin" : "/bookings"}
+                                to="/bookings"
                                 onClick={() => setOpen(false)}
                                 className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-foreground transition hover:bg-foreground/5 cursor-pointer"
                             >
-                                {isAdmin ? (
-                                    <ShieldCheck size={16} className="text-primary" />
-                                ) : (
-                                    <Ticket size={16} className="text-primary" />
-                                )}
-                                {isAdmin ? "Admin panel" : "My bookings"}
+                                <Ticket size={16} className="text-primary" />
+                                My bookings
                             </Link>
 
                             <button

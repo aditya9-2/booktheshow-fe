@@ -13,11 +13,8 @@ import TopProgressBar from "@/components/TopProgressBar"
 import BackgroundShapes from "@/components/BackgroundShapes"
 import { useAuthStore } from "@/store/authStore"
 import AmbientGlow from "@/components/AmbientGlow"
+import { SIGNIN_SHAPES } from "@/constants/backgroundShapes"
 
-const SIGNIN_SHAPES = [
-    { type: "circle" as const, size: 110, top: "-6%", left: "8%", delay: 0, duration: 9 },
-    { type: "square" as const, size: 48, bottom: "12%", right: "10%", delay: 1.2, duration: 10 },
-]
 
 const SignIn = () => {
     const navigate = useNavigate()

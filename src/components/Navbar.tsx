@@ -100,18 +100,27 @@ const Navbar = () => {
                         {isAuthenticated ? (
                             <>
                                 <p className="truncate text-xs text-muted-foreground">{email}</p>
+
+                                {isAdmin && (
+                                    <Link
+                                        to="/admin"
+                                        onClick={() => setOpen(false)}
+                                        className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+                                    >
+                                        <ShieldCheck size={16} className="text-primary" />
+                                        Admin panel
+                                    </Link>
+                                )}
+
                                 <Link
-                                    to={isAdmin ? "/admin" : "/bookings"}
+                                    to="/bookings"
                                     onClick={() => setOpen(false)}
                                     className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
                                 >
-                                    {isAdmin ? (
-                                        <ShieldCheck size={16} className="text-primary" />
-                                    ) : (
-                                        <Ticket size={16} className="text-primary" />
-                                    )}
-                                    {isAdmin ? "Admin panel" : "My bookings"}
+                                    <Ticket size={16} className="text-primary" />
+                                    My bookings
                                 </Link>
+
                                 <button
                                     onClick={handleMobileLogout}
                                     className="flex cursor-pointer items-center gap-2 text-left text-sm text-destructive"

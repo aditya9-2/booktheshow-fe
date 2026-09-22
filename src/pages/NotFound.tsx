@@ -4,11 +4,9 @@ import { Ghost } from "lucide-react"
 import { Button, Panel } from "@/components/ui-kit"
 import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
+import { NOT_FOUND_SHAPES } from "@/constants/backgroundShapes"
 
-const NOT_FOUND_SHAPES = [
-    { type: "circle" as const, size: 110, top: "10%", left: "10%", delay: 0, duration: 9 },
-    { type: "square" as const, size: 44, bottom: "15%", right: "12%", delay: 1, duration: 8 },
-]
+
 
 const NotFound = () => {
     return (

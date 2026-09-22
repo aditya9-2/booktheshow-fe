@@ -8,11 +8,9 @@ import { PageHeading, SkeletonCard, EmptyState, Button } from "@/components/ui-k
 import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
 import { ArrowLeft } from "lucide-react"
+import { EVENTS_SHAPES } from "@/constants/backgroundShapes"
 
-const EVENTS_SHAPES = [
-    { type: "circle" as const, size: 110, top: "5%", right: "6%", delay: 0, duration: 10 },
-    { type: "square" as const, size: 48, bottom: "10%", left: "4%", delay: 1, duration: 9 },
-]
+
 
 const Events = () => {
     const navigate = useNavigate();

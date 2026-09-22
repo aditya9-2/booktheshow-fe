@@ -8,10 +8,9 @@ import { Button, Panel, EmptyState } from "@/components/ui-kit"
 import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
 import { ArrowLeft } from "lucide-react"
+import { DETAIL_SHAPES } from "@/constants/backgroundShapes"
 
-const DETAIL_SHAPES = [
-    { type: "circle" as const, size: 100, top: "8%", left: "6%", delay: 0, duration: 9 },
-]
+
 
 const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString("en-US", {

@@ -10,17 +10,9 @@ import { PageHeading, Panel, SkeletonCard, EmptyState, Button } from "@/componen
 import { useAuthStore } from "@/store/authStore"
 import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
+import { BOOKINGS_SHAPES } from "@/constants/backgroundShapes"
 
-const BOOKINGS_SHAPES = [
-    {
-        type: "circle" as const,
-        size: 100,
-        top: "5%",
-        right: "6%",
-        delay: 0,
-        duration: 9
-    },
-]
+
 
 const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString("en-US", {
