@@ -2,7 +2,7 @@ import { useState, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import axios from "axios"
-import { ArrowLeft, Trash2, Edit, Calendar } from "lucide-react"
+import { ArrowLeft, Trash2, Edit, Calendar, AlertTriangle } from "lucide-react"
 import type { EventItem, CreateEventSection } from "@/lib/types"
 import { getAllEvents, deleteEvent, updateEvent } from "@/lib/api"
 import { Button, Panel, PageHeading } from "@/components/ui-kit"
@@ -13,6 +13,18 @@ import BackgroundShapes from "@/components/BackgroundShapes"
 import { ADMIN_SHAPES, CREATE_SHAPES } from "@/constants/backgroundShapes"
 import EventForm from "@/components/EventForm"
 
+// Import Shadcn AlertDialog components
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+
 const ManageEvents = () => {
     const navigate = useNavigate()
     const { showToast } = useToast()
@@ -22,6 +34,7 @@ const ManageEvents = () => {
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
     const [editingEvent, setEditingEvent] = useState<EventItem | null>(null)
+    const [eventToDelete, setEventToDelete] = useState<EventItem | null>(null)
 
     useEffect(() => {
         const fetchEvents = async () => {
@@ -37,15 +50,16 @@ const ManageEvents = () => {
         fetchEvents()
     }, [showToast])
 
-    const handleDelete = async (id: string) => {
-        if (!window.confirm("Are you sure you want to delete this event? This action cannot be undone.")) return
+    const handleDelete = async () => {
+        if (!eventToDelete?._id) return
 
         setSubmitting(true)
         try {
-            await deleteEvent(id)
+            await deleteEvent(eventToDelete._id)
             showToast("Event deleted successfully", "success")
-            setEvents((prev) => prev.filter((e) => e._id !== id))
-            if (editingEvent?._id === id) setEditingEvent(null)
+            setEvents((prev) => prev.filter((e) => e._id !== eventToDelete._id))
+            if (editingEvent?._id === eventToDelete._id) setEditingEvent(null)
+            setEventToDelete(null)
         } catch (err) {
             const message = axios.isAxiosError(err) ? err.response?.data?.message : "Failed to delete event."
             showToast(message || "Failed to delete event.", "error")
@@ -60,7 +74,6 @@ const ManageEvents = () => {
         setError(null)
         setSubmitting(true)
         try {
-            // Convert null to undefined to satisfy the API payload type
             const payload = {
                 ...data,
                 poster: data.poster ?? undefined,
@@ -82,6 +95,39 @@ const ManageEvents = () => {
     return (
         <>
             <TopProgressBar loading={loading || submitting} />
+
+            {/* Shadcn Delete Confirmation Modal */}
+            <AlertDialog open={!!eventToDelete} onOpenChange={(isOpen) => !isOpen && setEventToDelete(null)}>
+                <AlertDialogContent className="border-border bg-background/95 backdrop-blur-md sm:max-w-md">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="flex items-center gap-3 font-display text-xl">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                                <AlertTriangle size={20} />
+                            </div>
+                            Delete Event
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-muted-foreground mt-4 leading-relaxed">
+                            Are you sure you want to delete <span className="font-semibold text-foreground">{eventToDelete?.name}</span>? This action cannot be undone and will remove it from the catalog permanently.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="mt-4">
+                        <AlertDialogCancel disabled={submitting} className="border-border hover:bg-surface/50 cursor-pointer">
+                            Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={(e) => {
+                                e.preventDefault()
+                                handleDelete()
+                            }}
+                            disabled={submitting}
+                            className="bg-destructive text-destructive-foreground hover:bg-destructive/90 cursor-pointer"
+                        >
+                            {submitting ? "Deleting..." : "Yes, delete event"}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
             <section className="relative overflow-hidden px-6 py-16 min-h-[85vh]">
                 <AmbientGlow />
                 <BackgroundShapes shapes={editingEvent ? CREATE_SHAPES : ADMIN_SHAPES} />
@@ -90,12 +136,16 @@ const ManageEvents = () => {
                     <AnimatePresence mode="wait">
                         {!editingEvent ? (
                             <motion.div key="list" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>
-                                <Link to="/admin">
-                                    <Button variant="ghost" size="sm" className="mb-6 gap-2">
-                                        <ArrowLeft className="size-4" />
-                                        Back
-                                    </Button>
-                                </Link>
+                                
+                                <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => navigate("/admin")}
+                                    className="mb-6 gap-2"
+                                >
+                                    <ArrowLeft className="size-4" />
+                                    Back
+                                </Button>
 
                                 <PageHeading eyebrow="Inventory" title="Manage events" subtitle="Edit or remove existing shows from your catalog." />
 
@@ -131,7 +181,7 @@ const ManageEvents = () => {
                                                     <Button variant="dark" size="sm" onClick={() => { setEditingEvent(event); setError(null) }} className="gap-2">
                                                         <Edit size={14} /> Edit
                                                     </Button>
-                                                    <Button variant="danger" size="sm" onClick={() => handleDelete(event._id!)} className="gap-2">
+                                                    <Button variant="danger" size="sm" onClick={() => setEventToDelete(event)} className="gap-2">
                                                         <Trash2 size={14} />
                                                     </Button>
                                                 </div>
