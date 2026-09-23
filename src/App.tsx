@@ -20,6 +20,7 @@ import GuestOnlyRoute from "./components/GuestOnlyRoute"
 import AdminPanel from "./pages/admin/AdminPanel"
 import CreateEvent from "./pages/admin/CreateEvent"
 import ManageEvents from "./pages/admin/ManageEvents"
+import AskAI from "./pages/AskAI"
 
 const AUTH_ROUTES = ["/signin", "/signup"]
 
@@ -94,6 +95,16 @@ export const App = () => {
           element={
             <ProtectedRoute requireAdmin>
               <ManageEvents />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* AI */}
+        <Route
+          path="/ask-ai"
+          element={
+            <ProtectedRoute>
+              <AskAI />
             </ProtectedRoute>
           }
         />
