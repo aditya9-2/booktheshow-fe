@@ -165,3 +165,22 @@ export const CREATE_SHAPES = [
     },
 ]
 
+export const ASK_AI_SHAPES = [
+    {
+        type: "circle" as const,
+        size: 100,
+        top: "4%",
+        right: "8%",
+        delay: 0,
+        duration: 9
+    },
+    {
+        type: "square" as const,
+        size: 44,
+        bottom: "8%",
+        left: "5%",
+        delay: 1,
+        duration: 10
+    },
+]
+
