@@ -77,3 +77,23 @@ export type CreateEventResponse = {
     message: string;
     event: EventItem
 }
+
+export type ChatRole = "user" | "assistant"
+
+export type ChatToolResult = {
+    name: "searchEvents" | "getEventDetails"
+    result: EventItem[] | EventItem | { error: string }
+}
+
+export type ChatMessage = {
+    id: string
+    role: ChatRole
+    content: string
+    toolResults?: ChatToolResult[]
+}
+
+export type AskAIPayload = { message: string }
+export type AskAIResponse = { reply: string; toolResults: ChatToolResult[] }
+
+export type RawHistoryMessage = { role: "user" | "assistant"; content: string }
+export type ChatHistoryResponse = { history: RawHistoryMessage[] }
