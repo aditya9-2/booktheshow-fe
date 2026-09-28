@@ -1,5 +1,6 @@
 import { create } from "zustand"
 import { getToken, getStoredEmail, setSession, clearSession, decodeToken, isAdminRole } from "@/lib/auth"
+import { useChatStore } from "@/store/chatStore"
 
 type AuthState = {
     email: string | null
@@ -13,11 +14,8 @@ const getInitialAuthState = (): Pick<AuthState, "email" | "isAdmin" | "isAuthent
     const token = getToken()
     const storedEmail = getStoredEmail()
 
-    // console.log("hydrate check →", { token, storedEmail }) 
-
     if (token && storedEmail) {
         const payload = decodeToken(token)
-        // console.log("decoded payload →", payload)
         if (payload) {
             return {
                 email: storedEmail,
@@ -34,6 +32,9 @@ export const useAuthStore = create<AuthState>((set) => ({
     ...getInitialAuthState(),
 
     login: (token, userEmail) => {
+        
+        useChatStore.getState().reset()
+
         setSession(token, userEmail)
         const payload = decodeToken(token)
         set({
@@ -44,6 +45,8 @@ export const useAuthStore = create<AuthState>((set) => ({
     },
 
     logout: () => {
+        useChatStore.getState().reset()
+
         clearSession()
         set({ email: null, isAdmin: false, isAuthenticated: false })
     },
