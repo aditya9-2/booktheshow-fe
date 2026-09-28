@@ -1,0 +1,14 @@
+{$SITE_ADDRESS:localhost} {
+	handle /v1/* {
+		reverse_proxy api:3000 {
+			flush_interval -1
+		}
+	}
+
+	handle {
+		encode zstd gzip
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+}
