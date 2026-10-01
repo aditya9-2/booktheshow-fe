@@ -94,16 +94,20 @@ export const deleteEvent = (id: string) => {
 
 export const getChatHistory = () => api.get<ChatHistoryResponse>("/ai/history")
 
-/*
-    * NOTE: POST /ai/chat is intentionally NOT called through this axios `api`
-    instance. That endpoint streams a Server-Sent Events (SSE) response, and
-    axios has no built-in support for reading a streamed response body —
-    it buffers the whole response and resolves once, which defeats the
-    word-by-word streaming UX entirely.
 
-    * The actual request (same base URL, same auth token) is made with raw
-    `fetch` (`streamAIChat`), which manually
-    reads the response body as a stream via `res.body.getReader()`.
+export type CreateOrderPayload = { eventId: string; sectionId: string; quantity: number }
+export type CreateOrderResponse = { orderId: string; amount: number; currency: string; keyId: string }
+export type VerifyPaymentPayload = {
+    razorpay_order_id: string
+    razorpay_payment_id: string
+    razorpay_signature: string
+    eventId: string
+    sectionId: string
+    quantity: number
+}
 
-    * all these because i am using stream!
-*/
+export const createOrder = (payload: CreateOrderPayload) =>
+    api.post<CreateOrderResponse>("/payments/create-order", payload)
+
+export const verifyPayment = (payload: VerifyPaymentPayload) =>
+    api.post<CreateBookingResponse>("/payments/verify", payload)
