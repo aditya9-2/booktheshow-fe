@@ -11,7 +11,14 @@ import TopProgressBar from "@/components/TopProgressBar"
 import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
 import { BOOK_SHAPES } from "@/constants/backgroundShapes"
+import { createOrder, verifyPayment } from "@/lib/api";
 
+
+declare global {
+    interface Window {
+        Razorpay: any
+    }
+}
 
 const formatDate = (iso: string) =>
     new Date(iso).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })
@@ -118,24 +125,51 @@ const BookTickets = () => {
 
         setSubmitting(true)
         try {
-            // fresh idempotency key per booking attempt
-            const idempotencyKey = crypto.randomUUID()
-
-            const res = await createBooking({
+            const orderRes = await createOrder({
                 eventId: event._id,
                 sectionId: selectedSection._id,
                 quantity,
-                idempotencyKey,
             })
 
-            showToast(res.data.message ?? "Booking confirmed!", "success")
-            navigate("/bookings")
+            const { orderId, amount, currency, keyId } = orderRes.data
+
+            const razorpay = new window.Razorpay({
+                key: keyId,
+                amount,
+                currency,
+                order_id: orderId,
+                name: "BookTheShow",
+                description: `${quantity} × ${selectedSection.name} — ${event.name}`,
+                handler: async (response: any) => {
+                    try {
+                        const verifyRes = await verifyPayment({
+                            razorpay_order_id: response.razorpay_order_id,
+                            razorpay_payment_id: response.razorpay_payment_id,
+                            razorpay_signature: response.razorpay_signature,
+                            eventId: event._id,
+                            sectionId: selectedSection._id,
+                            quantity,
+                        })
+                        showToast(verifyRes.data.message ?? "Booking confirmed!", "success")
+                        navigate("/bookings")
+                    } catch (err) {
+                        showToast("Payment succeeded but booking failed — contact support.", "error")
+                    } finally {
+                        setSubmitting(false)
+                    }
+                },
+                modal: {
+                    ondismiss: () => setSubmitting(false),
+                },
+                theme: { color: "#0e7490" },
+            })
+
+            razorpay.open()
         } catch (err) {
             const message = axios.isAxiosError(err)
-                ? err.response?.data?.message ?? "Booking failed. Try again."
-                : "Booking failed. Try again."
+                ? err.response?.data?.message ?? "Couldn't start payment. Try again."
+                : "Couldn't start payment. Try again."
             showToast(message, "error")
-        } finally {
             setSubmitting(false)
         }
     }
@@ -287,7 +321,9 @@ const BookTickets = () => {
                         </p>
                     </Panel>
 
-                    {/* TODO: integrate a payment gateway */}
+                    <p className="mt-3 text-center text-xs text-muted-foreground">
+                        You'll be redirected to Razorpay to complete payment securely.
+                    </p>
                 </motion.div>
             </section>
         </>
