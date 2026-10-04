@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { useNavigate, Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
-import { LogOut, Ticket, ShieldCheck } from "lucide-react"
+import { LogOut, Ticket, ShieldCheck, WalletIcon } from "lucide-react"
 
 import { useToast } from "@/components/Toast"
 import { useAuthStore } from "@/store/authStore"
@@ -73,6 +73,15 @@ const UserProfile = () => {
                             >
                                 <Ticket size={16} className="text-primary" />
                                 My bookings
+                            </Link>
+
+                            <Link
+                                to="/wallet"
+                                onClick={() => setOpen(false)}
+                                className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-foreground transition hover:bg-foreground/5 cursor-pointer"
+                            >
+                                <WalletIcon size={16} className="text-primary" />
+                                Wallet
                             </Link>
 
                             <button
