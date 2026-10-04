@@ -1,21 +1,16 @@
 import { Link } from "react-router-dom"
+import { MapPin } from "lucide-react"
 import type { EventItem } from "@/lib/types"
 
 const formatDate = (iso: string) =>
-    new Date(iso).toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric",
-    })
+    new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })
 
-const priceRange = (sections?: EventItem["sections"]) => {
+const priceRange = (sections: EventItem["sections"]) => {
     if (!sections?.length) return "TBA"
-
     const prices = sections.map((s) => s.price)
     const min = Math.min(...prices)
     const max = Math.max(...prices)
-
-    return min === max ? `₹${min}` : `₹${min} – ₹${max}`
+    return min === max ? `₹${min}` : `₹${min}–₹${max}`
 }
 
 const EventCard = ({ event }: { event: EventItem }) => {
@@ -37,19 +32,20 @@ const EventCard = ({ event }: { event: EventItem }) => {
                     </div>
                 )}
             </div>
-
             <div className="p-5">
                 <p className="font-mono text-[11px] uppercase tracking-wide text-primary">
                     {formatDate(event.date)}
                 </p>
-
-                <h3 className="mt-2 text-lg font-semibold">
-                    {event.name}
-                </h3>
-
-                <p className="mt-3 text-sm font-semibold text-foreground">
-                    {priceRange(event.sections)}
-                </p>
+                <h3 className="mt-2 text-lg font-semibold">{event.name}</h3>
+                {(event.venue || event.location) && (
+                    <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
+                        <MapPin size={12} className="shrink-0" />
+                        <span className="truncate">
+                            {event.venue}{event.venue && event.location ? ", " : ""}{event.location}
+                        </span>
+                    </p>
+                )}
+                <p className="mt-3 text-sm font-semibold text-foreground">{priceRange(event.sections)}</p>
             </div>
         </Link>
     )
