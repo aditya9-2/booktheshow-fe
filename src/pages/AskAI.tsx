@@ -16,9 +16,11 @@ const AskAI = () => {
     const [input, setInput] = useState("")
     const [sending, setSending] = useState(false)
     const [typingId, setTypingId] = useState<string | null>(null)
+    const [statusText, setStatusText] = useState<string | null>(null)
     const [loadingHistory, setLoadingHistory] = useState(!hydrated)
     const scrollRef = useRef<HTMLDivElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
+    const sendingRef = useRef(false)
 
     // Rehydrate from the server's Redis-backed history once, on first mount
     useEffect(() => {
@@ -55,7 +57,10 @@ const AskAI = () => {
 
     const sendPrompt = async (prompt: string) => {
         const trimmed = prompt.trim()
-        if (!trimmed || sending) return
+        // Ref check blocks rapid double-sends even before React re-renders
+        // state from the first click
+        if (!trimmed || sendingRef.current) return
+        sendingRef.current = true
 
         addMessage({ id: crypto.randomUUID(), role: "user", content: trimmed })
         setInput("")
@@ -81,14 +86,19 @@ const AskAI = () => {
                     }))
                 }
             },
+            onStatus: (status) => setStatusText(status),
             onDone: () => {
+                sendingRef.current = false
                 setTypingId(null)
                 setSending(false)
+                setStatusText(null)
             },
             onError: (message) => {
                 updateMessage(assistantId, (m) => ({ ...m, content: message }))
+                sendingRef.current = false
                 setTypingId(null)
                 setSending(false)
+                setStatusText(null)
             },
         })
     }
@@ -126,14 +136,16 @@ const AskAI = () => {
                                     initial={{ opacity: 0, y: 12 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
-                                    className={`flex flex-col gap-2 ${msg.role === "user" ? "items-end" : "items-start"
-                                        }`}
+                                    className={`flex flex-col gap-2 ${
+                                        msg.role === "user" ? "items-end" : "items-start"
+                                    }`}
                                 >
                                     <div
-                                        className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${msg.role === "user"
+                                        className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
+                                            msg.role === "user"
                                                 ? "rounded-tr-sm bg-primary text-primary-foreground"
                                                 : "rounded-tl-sm bg-foreground/5 text-foreground"
-                                            }`}
+                                        }`}
                                     >
                                         {msg.content ? (
                                             <>
@@ -142,8 +154,15 @@ const AskAI = () => {
                                                     <span className="ml-0.5 inline-block h-3.5 w-0.5 animate-pulse bg-current align-middle" />
                                                 )}
                                             </>
+                                        ) : msg.id === typingId ? (
+                                            <div className="flex items-center gap-2 text-muted-foreground">
+                                                <Loader2 size={14} className="animate-spin" />
+                                                <span className="text-xs">{statusText ?? "Thinking…"}</span>
+                                            </div>
                                         ) : (
-                                            <Loader2 size={14} className="animate-spin text-muted-foreground" />
+                                            <span className="text-muted-foreground">
+                                                Sorry, I didn't get a response. Please try again.
+                                            </span>
                                         )}
                                     </div>
 
