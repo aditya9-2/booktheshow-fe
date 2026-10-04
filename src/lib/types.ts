@@ -11,6 +11,9 @@ export type EventItem = {
     name: string
     date: string
     posterUrl?: string
+    category: EventCategory
+    venue: string
+    location: string
     sections: EventSection[]
 }
 
@@ -69,6 +72,9 @@ export type CreateEventSection = {
 export type CreateEventPayload = {
     name: string
     date: string
+    category: EventCategory
+    venue: string
+    location: string
     sections: CreateEventSection[]
     poster?: File
 }
@@ -108,3 +114,14 @@ export type VerifyWalletPaymentPayload = {
     amount: number
 }
 export type VerifyWalletPaymentResponse = { message: string; balance: number }
+
+export const EventCategory = {
+    Music: "music",
+    Comedy: "comedy",
+    Theatre: "theatre",
+    Talks: "talks",
+    Sports: "sports",
+    Other: "other",
+} as const
+
+export type EventCategory = (typeof EventCategory)[keyof typeof EventCategory]
