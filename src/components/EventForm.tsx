@@ -35,6 +35,7 @@ const CATEGORY_LABELS: Record<EventCategory, string> = {
     [EventCategory.Theatre]: "Theatre",
     [EventCategory.Talks]: "Talks",
     [EventCategory.Sports]: "Sports",
+    [EventCategory.Movies]: "movies",
     [EventCategory.Other]: "Other",
 }
 
