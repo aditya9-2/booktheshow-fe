@@ -121,6 +121,7 @@ export const EventCategory = {
     Theatre: "theatre",
     Talks: "talks",
     Sports: "sports",
+    Movies: "movies",
     Other: "other",
 } as const
 
