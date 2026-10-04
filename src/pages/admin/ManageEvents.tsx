@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import axios from "axios"
 import { ArrowLeft, Trash2, Edit, Calendar, AlertTriangle } from "lucide-react"
-import type { EventItem, CreateEventSection } from "@/lib/types"
+import { EventCategory, type EventItem, type CreateEventSection } from "@/lib/types"
 import { getAllEvents, deleteEvent, updateEvent } from "@/lib/api"
 import { Button, Panel, PageHeading } from "@/components/ui-kit"
 import { useToast } from "@/components/Toast"
@@ -13,7 +13,6 @@ import BackgroundShapes from "@/components/BackgroundShapes"
 import { ADMIN_SHAPES, CREATE_SHAPES } from "@/constants/backgroundShapes"
 import EventForm from "@/components/EventForm"
 
-// Import Shadcn AlertDialog components
 import {
     AlertDialog,
     AlertDialogAction,
@@ -68,7 +67,15 @@ const ManageEvents = () => {
         }
     }
 
-    const handleUpdate = async (data: { name: string; date: string; sections: CreateEventSection[]; poster: File | null }) => {
+    const handleUpdate = async (data: {
+        name: string
+        date: string
+        category: EventCategory
+        venue: string
+        location: string
+        sections: CreateEventSection[]
+        poster: File | null
+    }) => {
         if (!editingEvent?._id) return
 
         setError(null)
@@ -96,7 +103,6 @@ const ManageEvents = () => {
         <>
             <TopProgressBar loading={loading || submitting} />
 
-            {/* Shadcn Delete Confirmation Modal */}
             <AlertDialog open={!!eventToDelete} onOpenChange={(isOpen) => !isOpen && setEventToDelete(null)}>
                 <AlertDialogContent className="border-border bg-background/95 backdrop-blur-md sm:max-w-md">
                     <AlertDialogHeader>
@@ -136,7 +142,7 @@ const ManageEvents = () => {
                     <AnimatePresence mode="wait">
                         {!editingEvent ? (
                             <motion.div key="list" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -20 }} transition={{ duration: 0.3 }}>
-                                
+
                                 <Button
                                     variant="ghost"
                                     size="sm"

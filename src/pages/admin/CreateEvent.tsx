@@ -11,7 +11,7 @@ import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
 import { CREATE_SHAPES } from "@/constants/backgroundShapes"
 import EventForm from "@/components/EventForm"
-import type { CreateEventSection } from "@/lib/types"
+import { EventCategory, type CreateEventSection } from "@/lib/types"
 
 const CreateEvent = () => {
     const navigate = useNavigate()
@@ -19,7 +19,15 @@ const CreateEvent = () => {
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
 
-    const handleCreate = async (data: { name: string; date: string; sections: CreateEventSection[]; poster: File | null }) => {
+    const handleCreate = async (data: {
+        name: string
+        date: string
+        category: EventCategory
+        venue: string
+        location: string
+        sections: CreateEventSection[]
+        poster: File | null
+    }) => {
         setError(null)
         setSubmitting(true)
         try {
