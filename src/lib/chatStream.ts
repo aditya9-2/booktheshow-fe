@@ -4,11 +4,11 @@ import type { ChatToolResult } from "./types"
 type StreamHandlers = {
     onToken: (token: string) => void
     onToolResults: (results: ChatToolResult[]) => void
+    onStatus: (status: string) => void
     onDone: () => void
     onError: (message: string) => void
 }
 
-// Streams the AI chat response via SSE using fetch (EventSource can't send auth headers)
 export const streamAIChat = async (message: string, handlers: StreamHandlers) => {
     const token = getToken()
 
@@ -50,6 +50,7 @@ export const streamAIChat = async (message: string, handlers: StreamHandlers) =>
 
                 if (eventName === "token") handlers.onToken(data.token)
                 else if (eventName === "toolResults") handlers.onToolResults(data.toolResults)
+                else if (eventName === "status") handlers.onStatus(data.status)
                 else if (eventName === "done") handlers.onDone()
                 else if (eventName === "error") handlers.onError(data.message ?? "Something went wrong.")
             }
