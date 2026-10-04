@@ -35,6 +35,9 @@ const createEventFormData = (payload: CreateEventPayload) => {
 
     formData.append("name", payload.name);
     formData.append("date", payload.date);
+    formData.append("category", payload.category);
+    formData.append("venue", payload.venue);
+    formData.append("location", payload.location);
     formData.append("sections", JSON.stringify(payload.sections));
 
     if (payload.poster) {
@@ -72,7 +75,10 @@ export type SingleEventResponse = {
 export const signup = (payload: SignupPayload) => api.post("/auth/signup", payload);
 export const signin = (payload: SigninPayload) => api.post<SigninResponse>("/auth/signin", payload);
 
-export const getAllEvents = () => api.get<AllEventsResponse>("/event/all");
+export const getAllEvents = (category?: string) => {
+    return api.get<AllEventsResponse>("/event/all", { params: category ? { category } : undefined });
+}
+
 export const getEventById = (id: string) => api.get<SingleEventResponse>(`event/${id}`);
 
 export const createBooking = (payload: CreateBookingPayload) => {
