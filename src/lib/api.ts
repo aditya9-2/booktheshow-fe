@@ -1,5 +1,18 @@
 import axios from "axios";
-import type { ChatHistoryResponse, CreateBookingPayload, CreateBookingResponse, CreateEventPayload, CreateEventResponse, EventItem, MyBookingsResponse } from "./types";
+import type {
+    ChatHistoryResponse,
+    CreateBookingPayload,
+    CreateBookingResponse,
+    CreateEventPayload,
+    CreateEventResponse,
+    CreateWalletOrderPayload,
+    CreateWalletOrderResponse,
+    EventItem,
+    MyBookingsResponse,
+    VerifyWalletPaymentPayload,
+    VerifyWalletPaymentResponse,
+    Wallet
+} from "./types";
 import { getToken } from "./auth";
 
 export const api = axios.create({
@@ -106,8 +119,21 @@ export type VerifyPaymentPayload = {
     quantity: number
 }
 
-export const createOrder = (payload: CreateOrderPayload) =>
-    api.post<CreateOrderResponse>("/payments/create-order", payload)
+export const createOrder = (payload: CreateOrderPayload) => {
+    return api.post<CreateOrderResponse>("/payments/create-order", payload)
+}
 
-export const verifyPayment = (payload: VerifyPaymentPayload) =>
-    api.post<CreateBookingResponse>("/payments/verify", payload)
+
+export const verifyPayment = (payload: VerifyPaymentPayload) => {
+    return api.post<CreateBookingResponse>("/payments/verify", payload)
+}
+
+
+export const getWallet = () => api.get<Wallet>("/wallet");
+
+export const createWalletOrder = (payload: CreateWalletOrderPayload) => {
+    return api.post<CreateWalletOrderResponse>("/wallet/create-order", payload)
+}
+export const verifyWalletPayment = (payload: VerifyWalletPaymentPayload) => {
+    return api.post<VerifyWalletPaymentResponse>("/wallet/verify", payload)
+}
