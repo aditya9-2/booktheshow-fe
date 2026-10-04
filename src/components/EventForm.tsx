@@ -1,12 +1,22 @@
 import { useState, useEffect, useMemo, type FormEvent } from "react"
 import { ImagePlus, Plus, Trash2, X } from "lucide-react"
-import type { CreateEventSection, EventItem } from "@/lib/types"
+import { EventCategory, type CreateEventSection, type EventItem } from "@/lib/types"
 import { Button, Panel } from "@/components/ui-kit"
 import AuthField from "@/components/AuthField"
 
+interface EventFormData {
+    name: string
+    date: string
+    category: EventCategory
+    venue: string
+    location: string
+    sections: CreateEventSection[]
+    poster: File | null
+}
+
 interface EventFormProps {
     initialData?: EventItem | null
-    onSubmit: (data: { name: string; date: string; sections: CreateEventSection[]; poster: File | null }) => void
+    onSubmit: (data: EventFormData) => void
     onCancel?: () => void
     submitting: boolean
     error?: string | null
@@ -19,11 +29,23 @@ const emptySection = (): CreateEventSection => ({
     remaining: "" as unknown as number,
 })
 
+const CATEGORY_LABELS: Record<EventCategory, string> = {
+    [EventCategory.Music]: "Music",
+    [EventCategory.Comedy]: "Comedy",
+    [EventCategory.Theatre]: "Theatre",
+    [EventCategory.Talks]: "Talks",
+    [EventCategory.Sports]: "Sports",
+    [EventCategory.Other]: "Other",
+}
+
 const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externalError }: EventFormProps) => {
     const isUpdate = !!initialData
 
     const [name, setName] = useState("")
     const [date, setDate] = useState("")
+    const [category, setCategory] = useState<EventCategory>(EventCategory.Other)
+    const [venue, setVenue] = useState("")
+    const [location, setLocation] = useState("")
     const [sections, setSections] = useState<CreateEventSection[]>([emptySection()])
     const [poster, setPoster] = useState<File | null>(null)
     const [posterPreview, setPosterPreview] = useState<string | null>(null)
@@ -37,12 +59,16 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
             setDate(new Date(initialData.date).toISOString().split("T")[0])
             setSections(initialData.sections)
             setPosterPreview(initialData.posterUrl || null)
+            setCategory(initialData.category ?? EventCategory.Other)
+            setVenue(initialData.venue ?? "")
+            setLocation(initialData.location ?? "")
         }
     }, [initialData])
 
     const isFilled = useMemo(() => {
         if (!isUpdate && !poster) return false
         if (!name.trim() || !date) return false
+        if (!venue.trim() || !location.trim()) return false
         if (sections.length === 0) return false
 
         for (const s of sections) {
@@ -51,14 +77,17 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
             }
         }
         return true
-    }, [name, date, poster, sections, isUpdate])
+    }, [name, date, venue, location, poster, sections, isUpdate])
 
     const isDirty = useMemo(() => {
-        if (!isUpdate || !initialData) return true 
+        if (!isUpdate || !initialData) return true
 
         if (name.trim() !== initialData.name) return true
         if (date !== new Date(initialData.date).toISOString().split("T")[0]) return true
-        if (poster !== null) return true 
+        if (category !== (initialData.category ?? EventCategory.Other)) return true
+        if (venue.trim() !== (initialData.venue ?? "")) return true
+        if (location.trim() !== (initialData.location ?? "")) return true
+        if (poster !== null) return true
         if (sections.length !== initialData.sections.length) return true
 
         for (let i = 0; i < sections.length; i++) {
@@ -70,8 +99,8 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
         }
 
         return false
-    }, [name, date, poster, sections, isUpdate, initialData])
-    
+    }, [name, date, category, venue, location, poster, sections, isUpdate, initialData])
+
 
     const handlePosterFile = (file: File | undefined) => {
         if (!file) return
@@ -106,6 +135,8 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
         if (!isUpdate && !poster) return "Event poster is mandatory. Please upload an image."
         if (!name.trim()) return "Event name is mandatory."
         if (!date) return "Event date is mandatory."
+        if (!venue.trim()) return "Venue is mandatory."
+        if (!location.trim()) return "Location is mandatory."
 
         if (new Date(date) < new Date(new Date().toDateString())) {
             if (!isUpdate || date !== new Date(initialData!.date).toISOString().split("T")[0]) {
@@ -146,6 +177,9 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
         onSubmit({
             name: name.trim(),
             date,
+            category,
+            venue: venue.trim(),
+            location: location.trim(),
             sections: sections.map((s) => ({
                 name: s.name.trim(),
                 price: Number(s.price),
@@ -197,6 +231,25 @@ const EventForm = ({ initialData, onSubmit, onCancel, submitting, error: externa
             <div className="grid gap-5 sm:grid-cols-2">
                 <AuthField id="name" label="Event name *" type="text" required value={name} onChange={(e) => setName(e.target.value)} />
                 <AuthField id="date" label="Event date *" type="date" required value={date} onChange={(e) => setDate(e.target.value)} />
+            </div>
+
+            <div className="grid gap-5 sm:grid-cols-3">
+                <div className="flex flex-col gap-1.5">
+                    <span className="text-[11px] uppercase tracking-wide text-muted-foreground">Category *</span>
+                    <select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value as EventCategory)}
+                        className="rounded-lg border border-border bg-background/60 px-3 py-2.5 text-sm outline-none focus:border-primary/50"
+                    >
+                        {Object.values(EventCategory).map((c) => (
+                            <option key={c} value={c}>
+                                {CATEGORY_LABELS[c]}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+                <AuthField id="venue" label="Venue *" type="text" required value={venue} onChange={(e) => setVenue(e.target.value)} placeholder="ABC Auditorium" />
+                <AuthField id="location" label="Location *" type="text" required value={location} onChange={(e) => setLocation(e.target.value)} placeholder="Kolkata" />
             </div>
 
             <div>
