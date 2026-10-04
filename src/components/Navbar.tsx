@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
-import { Menu, X, Ticket, ShieldCheck, LogOut } from "lucide-react"
+import { Menu, X, Ticket, ShieldCheck, LogOut, WalletIcon } from "lucide-react"
 import { Button } from "@/components/ui-kit"
 import { useAuthStore } from "@/store/authStore"
 import { useToast } from "@/components/Toast"
@@ -119,6 +119,15 @@ const Navbar = () => {
                                 >
                                     <Ticket size={16} className="text-primary" />
                                     My bookings
+                                </Link>
+
+                                <Link
+                                    to="/wallet"
+                                    onClick={() => setOpen(false)}
+                                    className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground"
+                                >
+                                    <WalletIcon size={16} className="text-primary" />
+                                    Wallet
                                 </Link>
 
                                 <button
