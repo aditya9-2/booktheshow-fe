@@ -21,6 +21,7 @@ import AdminPanel from "./pages/admin/AdminPanel"
 import CreateEvent from "./pages/admin/CreateEvent"
 import ManageEvents from "./pages/admin/ManageEvents"
 import AskAI from "./pages/AskAI"
+import WalletPage from "./pages/Wallet"
 
 const AUTH_ROUTES = ["/signin", "/signup"]
 
@@ -105,6 +106,16 @@ export const App = () => {
           element={
             <ProtectedRoute>
               <AskAI />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Wallet */}
+        <Route
+          path="/wallet"
+          element={
+            <ProtectedRoute>
+              <WalletPage />
             </ProtectedRoute>
           }
         />
