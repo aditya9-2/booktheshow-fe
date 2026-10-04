@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom"
-import { Music, Mic2, Drama, MessageSquare } from "lucide-react"
+import { Music, Trophy, Laugh, Clapperboard } from "lucide-react"
+import { EventCategory } from "@/lib/types"
 
-// TODO: NEW API NEEDED
 const CATEGORIES = [
-    { label: "Music", slug: "music", icon: Music, count: 42 },
-    { label: "Comedy", slug: "comedy", icon: Mic2, count: 31 },
-    { label: "Theatre", slug: "theatre", icon: Drama, count: 18 },
-    { label: "Talks", slug: "talks", icon: MessageSquare, count: 12 },
+    { label: "Music", slug: EventCategory.Music, icon: Music },
+    { label: "Sports", slug: EventCategory.Sports, icon: Trophy },
+    { label: "Comedy", slug: EventCategory.Comedy, icon: Laugh },
+    { label: "Movies", slug: EventCategory.Movies, icon: Clapperboard },
 ]
 
 const CategoryGrid = () => {
@@ -17,7 +17,7 @@ const CategoryGrid = () => {
             </p>
 
             <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                {CATEGORIES.map(({ label, slug, icon: Icon, count }) => (
+                {CATEGORIES.map(({ label, slug, icon: Icon }) => (
                     <Link
                         key={slug}
                         to={`/events?category=${slug}`}
@@ -27,9 +27,9 @@ const CategoryGrid = () => {
                             size={28}
                             className="text-primary transition group-hover:scale-110"
                         />
+
                         <div className="mt-8">
                             <h3 className="text-lg font-semibold">{label}</h3>
-                            <p className="mt-1 font-mono text-xs text-muted-foreground">{count} shows</p>
                         </div>
                     </Link>
                 ))}
@@ -39,3 +39,4 @@ const CategoryGrid = () => {
 }
 
 export default CategoryGrid
+
