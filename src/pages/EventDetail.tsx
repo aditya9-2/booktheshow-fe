@@ -7,7 +7,7 @@ import type { EventItem } from "@/lib/types"
 import { Button, Panel, EmptyState } from "@/components/ui-kit"
 import AmbientGlow from "@/components/AmbientGlow"
 import BackgroundShapes from "@/components/BackgroundShapes"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, MapPin } from "lucide-react"
 import { DETAIL_SHAPES } from "@/constants/backgroundShapes"
 
 
@@ -116,6 +116,13 @@ const EventDetail = () => {
                     <h1 className="mt-3 text-balance font-display text-4xl leading-[0.95] tracking-wide sm:text-5xl">
                         {event.name}
                     </h1>
+
+                    {(event.venue || event.location) && (
+                        <p className="mt-2 flex items-center gap-1.5 text-sm text-muted-foreground">
+                            <MapPin size={14} className="shrink-0" />
+                            {event.venue}{event.venue && event.location ? ", " : ""}{event.location}
+                        </p>
+                    )}
 
                     <div className="mt-8 flex flex-col gap-3">
                         <p className="font-mono text-xs uppercase tracking-[0.2em] text-muted-foreground">
