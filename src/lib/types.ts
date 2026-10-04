@@ -97,3 +97,14 @@ export type AskAIResponse = { reply: string; toolResults: ChatToolResult[] }
 
 export type RawHistoryMessage = { role: "user" | "assistant"; content: string }
 export type ChatHistoryResponse = { history: RawHistoryMessage[] }
+
+export type Wallet = { balance: number }
+export type CreateWalletOrderPayload = { amount: number }
+export type CreateWalletOrderResponse = { orderId: string; amount: number; currency: string; keyId: string }
+export type VerifyWalletPaymentPayload = {
+    razorpay_order_id: string
+    razorpay_payment_id: string
+    razorpay_signature: string
+    amount: number
+}
+export type VerifyWalletPaymentResponse = { message: string; balance: number }
