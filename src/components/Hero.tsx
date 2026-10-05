@@ -5,32 +5,44 @@ import heroImage from "@/assets/hero.png"
 import { motion, useMotionValue, useTransform, animate } from "framer-motion"
 import { useEffect } from "react"
 
+
+const formatNumber = (value: number) => {
+    const rounded = Math.round(value)
+
+    if (rounded >= 1000) {
+        return `${(rounded / 1000).toFixed(1)}k`
+    }
+
+    return rounded.toString()
+}
+
 const AnimatedNumber = ({
     value,
-    suffix = "",
+    delay = 0.4,
 }: {
     value: number
-    suffix?: string
+    delay?: number
 }) => {
     const count = useMotionValue(0)
 
-    const rounded = useTransform(count, (latest) =>
-        Math.round(latest).toLocaleString()
-    )
+    const formatted = useTransform(count, (latest) => formatNumber(latest))
 
     useEffect(() => {
-        const controls = animate(count, value, {
-            duration: 2.4,
-            ease: "easeOut",
-        })
+        const timer = setTimeout(() => {
+            const controls = animate(count, value, {
+                duration: 3,
+                ease: [0.16, 1, 0.3, 1],
+            })
 
-        return () => controls.stop()
-    }, [count, value])
+            return () => controls.stop()
+        }, delay * 1000)
+
+        return () => clearTimeout(timer)
+    }, [count, value, delay])
 
     return (
         <motion.span className="block text-xl font-medium text-foreground">
-            <motion.span>{rounded}</motion.span>
-            {suffix}
+            {formatted}
         </motion.span>
     )
 }
@@ -65,17 +77,17 @@ const Hero = () => {
 
                     <div className="mt-10 flex gap-8 font-mono text-xs text-muted-foreground">
                         <div>
-                            <AnimatedNumber value={128} />
+                            <AnimatedNumber value={128} delay={1.8} />
                             shows listed
                         </div>
 
                         <div>
-                            <AnimatedNumber value={41} />
+                            <AnimatedNumber value={41} delay={1.9} />
                             city venues
                         </div>
 
                         <div>
-                            <AnimatedNumber value={6200} suffix="+" />
+                            <AnimatedNumber value={6200} delay={2.3} />
                             tickets sold
                         </div>
                     </div>
