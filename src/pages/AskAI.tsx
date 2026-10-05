@@ -77,13 +77,16 @@ const AskAI = () => {
             onToolResults: (results) => {
                 const events: EventItem[] = results.flatMap((tr) => {
                     if (!tr.result || "error" in tr.result) return []
-                    return Array.isArray(tr.result) ? tr.result : [tr.result]
+                    const items = Array.isArray(tr.result) ? tr.result : [tr.result]
+                    return items.filter((e) => e && e._id && e.name);
                 })
                 if (events.length) {
                     updateMessage(assistantId, (m) => ({
                         ...m,
                         toolResults: [{ name: "searchEvents", result: events }],
                     }))
+                } else {
+                    updateMessage(assistantId, (m) => ({ ...m, toolResults: undefined }))
                 }
             },
             onStatus: (status) => setStatusText(status),
@@ -136,16 +139,14 @@ const AskAI = () => {
                                     initial={{ opacity: 0, y: 12 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
-                                    className={`flex flex-col gap-2 ${
-                                        msg.role === "user" ? "items-end" : "items-start"
-                                    }`}
+                                    className={`flex flex-col gap-2 ${msg.role === "user" ? "items-end" : "items-start"
+                                        }`}
                                 >
                                     <div
-                                        className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${
-                                            msg.role === "user"
-                                                ? "rounded-tr-sm bg-primary text-primary-foreground"
-                                                : "rounded-tl-sm bg-foreground/5 text-foreground"
-                                        }`}
+                                        className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm ${msg.role === "user"
+                                            ? "rounded-tr-sm bg-primary text-primary-foreground"
+                                            : "rounded-tl-sm bg-foreground/5 text-foreground"
+                                            }`}
                                     >
                                         {msg.content ? (
                                             <>
