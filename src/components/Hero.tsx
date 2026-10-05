@@ -2,7 +2,38 @@ import { Link } from "react-router-dom"
 import { Button } from "@/components/ui-kit"
 import { AuroraBackground } from "@/components/ui/aurora-background"
 import heroImage from "@/assets/hero.png"
-import { motion } from "framer-motion"
+import { motion, useMotionValue, useTransform, animate } from "framer-motion"
+import { useEffect } from "react"
+
+const AnimatedNumber = ({
+    value,
+    suffix = "",
+}: {
+    value: number
+    suffix?: string
+}) => {
+    const count = useMotionValue(0)
+
+    const rounded = useTransform(count, (latest) =>
+        Math.round(latest).toLocaleString()
+    )
+
+    useEffect(() => {
+        const controls = animate(count, value, {
+            duration: 2.4,
+            ease: "easeOut",
+        })
+
+        return () => controls.stop()
+    }, [count, value])
+
+    return (
+        <motion.span className="block text-xl font-medium text-foreground">
+            <motion.span>{rounded}</motion.span>
+            {suffix}
+        </motion.span>
+    )
+}
 
 const Hero = () => {
     return (
@@ -12,18 +43,21 @@ const Hero = () => {
                     <p className="font-mono text-xs uppercase tracking-[0.25em] text-primary">
                         Now booking · Spring 2026
                     </p>
+
                     <h1 className="mt-5 text-balance font-display text-[3.5rem] leading-[0.95] tracking-wide sm:text-[5.5rem]">
                         The stage is yours.
                     </h1>
+
                     <p className="mt-6 max-w-md text-pretty text-lg text-muted-foreground">
-                        Book live shows, talks and stage nights in seconds — or just ask the concierge what to catch
-                        this weekend.
+                        Book live shows, talks and stage nights in seconds — or just ask
+                        the concierge what to catch this weekend.
                     </p>
 
                     <div className="mt-8 flex flex-wrap items-center gap-4">
                         <Link to="/events">
                             <Button variant="primary">Browse events</Button>
                         </Link>
+
                         <Link to="/ask-ai">
                             <Button variant="ghost">Ask the concierge</Button>
                         </Link>
@@ -31,15 +65,17 @@ const Hero = () => {
 
                     <div className="mt-10 flex gap-8 font-mono text-xs text-muted-foreground">
                         <div>
-                            <span className="block text-xl font-medium text-foreground">128</span>
+                            <AnimatedNumber value={128} />
                             shows listed
                         </div>
+
                         <div>
-                            <span className="block text-xl font-medium text-foreground">41</span>
+                            <AnimatedNumber value={41} />
                             city venues
                         </div>
+
                         <div>
-                            <span className="block text-xl font-medium text-foreground">6.2k</span>
+                            <AnimatedNumber value={6200} suffix="+" />
                             tickets sold
                         </div>
                     </div>
